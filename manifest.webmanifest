@@ -1,6 +1,6 @@
 {
- "name": "Kortos",
- "short_name": "Kortos",
+ "name": "Cardly",
+ "short_name": "Cardly",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
