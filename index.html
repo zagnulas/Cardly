@@ -127,10 +127,36 @@ input,select{box-shadow:inset 0 1px 3px rgba(0,0,0,.18)}
 .deck{flex-direction:column;overflow-x:hidden;overflow-y:auto;scroll-snap-type:y mandatory;height:min(60vh,540px);padding:0 7%;margin:0 -18px;overscroll-behavior:contain}
 .wc{flex:0 0 auto;width:84%;align-self:center}
 .wc+.wc{margin-left:0;margin-top:-14px}
+
+/* screenshot cards */
+.wbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.wc.has::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.4),transparent 38%,rgba(0,0,0,.6))}
+.wc>.wt,.wc>.wm,.wc>.wb{position:relative;z-index:1}.wc::after{z-index:2}
+.wc.has .wl{visibility:hidden}
+.wc.has{box-shadow:0 0 0 1.5px rgba(150,165,205,.65),inset 0 0 0 1px rgba(255,255,255,.3),0 26px 38px -20px rgba(0,0,0,.75)}
+.wc.has{box-shadow:0 0 0 2.5px #4F8CFF,0 0 0 6px rgba(79,140,255,.22),inset 0 0 0 1px rgba(255,255,255,.35),0 26px 38px -20px rgba(0,0,0,.75)}
+.full .x{width:48px;height:48px;background:#E2E7F3;border:1px solid rgba(15,30,70,.14);color:#0B1220;box-shadow:0 8px 18px -8px rgba(15,30,70,.45),inset 0 1px 0 rgba(255,255,255,.7)}
+.full .x svg{width:22px;height:22px;max-width:none;max-height:none;stroke-width:2.8}
+.full .bar button{padding:0 8px;white-space:nowrap;font-size:14px}
+.back{min-height:40px;padding:0 14px 0 8px;border-radius:99px;display:inline-flex;align-items:center;gap:2px;font-size:15px;margin:0 0 2px -4px;color:var(--ac);background:none;border:0}
+/* halloween start */
+body.hw{--ac:#FF8A2B;--ac2:#B66DFF;--grad:linear-gradient(135deg,#FF8A2B,#E5481C)}
+body.hw::before{background:radial-gradient(70% 42% at 50% 30%,rgba(255,122,24,.16),transparent 72%),radial-gradient(55% 34% at 100% 100%,rgba(140,70,220,.16),transparent 72%)}
+body.hw::after{content:'';position:fixed;top:0;right:0;width:120px;height:120px;z-index:-1;pointer-events:none;opacity:.35;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%20120%20120%27%3E%3Cg%20fill%3D%27none%27%20stroke%3D%27%23fff%27%20stroke-width%3D%271%27%3E%3Cpath%20d%3D%27M120%200L0%200M120%200L0%2036M120%200L14%2084M120%200L50%20118M120%200L120%20120%27%2F%3E%3Ccircle%20cx%3D%27120%27%20cy%3D%270%27%20r%3D%2730%27%2F%3E%3Ccircle%20cx%3D%27120%27%20cy%3D%270%27%20r%3D%2760%27%2F%3E%3Ccircle%20cx%3D%27120%27%20cy%3D%270%27%20r%3D%2790%27%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") no-repeat top right/contain}
+body.hw .pri,body.hw nav .plus{box-shadow:0 10px 26px -10px rgba(255,110,20,.75),inset 0 1px 0 rgba(255,255,255,.3)}
+body.hw .opt.pri{background:linear-gradient(135deg,rgba(255,138,43,.26),rgba(140,70,220,.14));border-color:rgba(255,138,43,.5);box-shadow:0 14px 34px -18px rgba(255,110,20,.8),inset 0 1px 0 rgba(255,255,255,.12)}
+body.hw .opt .oi{background:rgba(255,138,43,.14)}
+body.hw .opt.pri .oi{background:var(--grad)}
+body.hw nav button.on{background:rgba(255,138,43,.16)}
+body.hw input:focus,body.hw select:focus{box-shadow:0 0 0 4px rgba(255,138,43,.2)}
+body.hw main>h1::after{content:'🎃';margin-left:10px;font-size:.78em}
+/* halloween end */
 </style></head><body><div id="app"></div>
 <script>
 /* BANERIS: keiskite tik cia. img = paveikslelio failas (pvz. 'banner.png') arba tuscia; link = kur nukreipia; on:false isjungia */
-const AD={on:true,img:'',link:'https://example.com',text:'BANERIS MANTO'};
+const AD={on:true,img:'',link:'https://example.com',text:'Jūsų reklama čia'};
+/* HELOVYNAS: on:false isjungia; pats issijungs po 'until' datos. Pasalinti visiskai: istrinti sia eilute, 'HW' eilute apacioje ir CSS bloka tarp 'halloween start/end'. */
+const HW={on:true,until:'2026-11-03'};
 const COL=['#3F6DFF','#22B8EE','#8B6CFF','#F25C8A','#F5A524','#2FC98E','#F2674F','#6B7690'];
 const ICO=['🛒','🛍️','☕','⛽','💊','🍔','👕','📚','🐾','🎬','✈️','💳'];
 const TYPES={ean_13:['EAN-13','EAN13'],ean_8:['EAN-8','EAN8'],code_128:['Code 128','CODE128'],code_39:['Code 39','CODE39'],upc_a:['UPC-A','UPC'],upc_e:['UPC-E','UPC'],itf:['ITF','ITF'],qr_code:['QR Code','']};
@@ -139,7 +165,7 @@ const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&g
 let S={cards:[],view:'home',q:'',id:null,draft:null,tab:'home',ob:false,theme:'dark',lang:null,fc:null,fo:false,stream:null};
 const load=()=>{try{const d=JSON.parse(localStorage.getItem('kortos')||'{}');S.cards=d.cards||[];S.theme=d.v>=2?(d.theme||'dark'):'dark';S.lang=d.lang||null;S.ob=!!d.ob}catch(e){}};
 const save=()=>{try{localStorage.setItem('kortos',JSON.stringify({v:2,cards:S.cards,theme:S.theme,ob:S.ob,lang:S.lang}))}catch(e){toast('Nepavyko išsaugoti')}};
-const EN={"Visos kortelės vienoje vietoje": "All your cards in one place", "Nuskenuokite fizines korteles": "Scan your physical cards", "Parodykite jas iškart kasoje": "Show them instantly at checkout", "Toliau": "Next", "Leisti kamerą ir pradėti": "Allow camera and start", "Praleisti": "Skip", "Kortos": "Cards", "Ieškoti pagal pavadinimą": "Search by name", "Dar nėra kortelių.": "No cards yet.", "Pridėti pirmą kortelę": "Add your first card", "Mėgstamos": "Favorites", "Visos kortelės": "All cards", "Kortelės": "Cards", "Nieko nerasta": "Nothing found", "Pažymėkite kortelę žvaigždute ir ji atsiras čia.": "Star a card and it will appear here.", "Nauja kortelė": "New card", "📷 Nuskenuoti barkodą": "📷 Scan barcode", "🖼️ Nufotografuoti kortelę": "🖼️ Take a photo of the card", "⌨️ Įvesti ranka": "⌨️ Enter manually", "Įvesti ranka": "Enter manually", "📸 Ekrano nuotrauka su QR": "📸 Screenshot with QR", "Nustatymai": "Settings", "Kalba": "Language", "Tema": "Theme", "Šviesi": "Light", "Tamsi": "Dark", "Duomenys": "Data", "Kortelės saugomos tik šiame įrenginyje ir veikia be interneto.": "Cards are stored only on this device and work offline.", "Eksportuoti kopiją (JSON)": "Export backup (JSON)", "Importuoti kopiją (JSON)": "Import backup (JSON)", "Ištrinti visas korteles": "Delete all cards", "Rodyti pristatymą": "Show intro", "Pradžia": "Home", "Pridėti": "Add", "Redaguoti": "Edit", "Kortelės duomenys": "Card details", "Peržiūra atsiras čia": "Preview will appear here", "Parduotuvė (pvz., Maxima)": "Store (e.g. Tesco)", "Kortelės pavadinimas (nebūtina)": "Card name (optional)", "Barkodo numeris": "Barcode number", "Išplėstiniai nustatymai": "Advanced settings", "Tipas parenkamas automatiškai pagal numerį. Keiskite tik jei kasoje kodas neskaitomas arba reikia QR.": "The type is chosen automatically from the number. Change it only if the code will not scan at checkout, or if you need a QR.", "Spalva": "Colour", "🖼️ Pakeisti paveikslėlį": "🖼️ Change image", "🖼️ Įkelti savo paveikslėlį": "🖼️ Upload your own image", "Pašalinti": "Remove", "📸 Įkelti ekrano nuotrauką su kodu": "📸 Upload a screenshot with the code", "📸 Pakeisti ekrano nuotrauką su kodu": "📸 Change the screenshot", "Rodyti nuotrauką vietoj barkodo": "Show the photo instead of the barcode", "Išsaugoti": "Save", "Atšaukti": "Cancel", "↑ Aukščiau": "↑ Move up", "↓ Žemiau": "↓ Move down", "Ištrinti": "Delete", "☀️ Ryškumas": "☀️ Brightness", "Uždaryti": "Close", "Nepavyko išsaugoti": "Could not save", "Naršyklė nepalaiko skenavimo – įveskite ranka": "This browser cannot scan – enter manually", "Kamera nepasiekiama – įjunkite leidimą arba įveskite ranka": "Camera unavailable – allow access or enter manually", "Barkodas rastas": "Barcode found", "Barkodo neradome – įveskite numerį": "No barcode found – enter the number", "Įveskite numerį ranka": "Enter the number manually", "Nepavyko nuskaityti nuotraukos": "Could not read the photo", "Ištrinti šią kortelę?": "Delete this card?", "Ištrinta": "Deleted", "Perkelta": "Moved", "Ištrinti VISAS korteles?": "Delete ALL cards?", "Įveskite parduotuvės pavadinimą": "Enter the store name", "Įveskite numerį arba įkelkite nuotrauką": "Enter a number or upload a photo", "Kortelė išsaugota": "Card saved", "Bakstelėkite ekraną, kad grąžintumėte mygtukus": "Tap the screen to bring the buttons back", "Kodas atpažintas": "Code recognised", "Kodo neatpažinau – rodysiu nuotrauką": "Code not recognised – showing the photo", "Netinkamas failas": "Invalid file", "Importuota kortelių: ": "Cards imported: ", "Neteisingas kodas": "Invalid code", "Nepavyko nuskaityti paveikslėlio": "Could not read the image", "Lojalumo kortelė": "Loyalty card", "Reklama": "Ad", "Kortelių sąrašas": "Card list", "Kortelės pavadinimas (pvz., Maxima) *": "Card name (e.g. Tesco) *", "Įveskite kortelės pavadinimą": "Enter the card name", "Rodyti barkodą": "Show barcode", "Filtras": "Filter", "Visos": "All", "Nuskenuoti barkodą": "Scan barcode", "Nufotografuoti kortelę": "Take a photo of the card", "Ekrano nuotrauka su QR": "Screenshot with QR"};
+const EN={"Visos kortelės vienoje vietoje": "All your cards in one place", "Nuskenuokite fizines korteles": "Scan your physical cards", "Parodykite jas iškart kasoje": "Show them instantly at checkout", "Toliau": "Next", "Leisti kamerą ir pradėti": "Allow camera and start", "Praleisti": "Skip", "Kortos": "Cards", "Ieškoti pagal pavadinimą": "Search by name", "Dar nėra kortelių.": "No cards yet.", "Pridėti pirmą kortelę": "Add your first card", "Mėgstamos": "Favorites", "Visos kortelės": "All cards", "Kortelės": "Cards", "Nieko nerasta": "Nothing found", "Pažymėkite kortelę žvaigždute ir ji atsiras čia.": "Star a card and it will appear here.", "Nauja kortelė": "New card", "📷 Nuskenuoti barkodą": "📷 Scan barcode", "🖼️ Nufotografuoti kortelę": "🖼️ Take a photo of the card", "⌨️ Įvesti ranka": "⌨️ Enter manually", "Įvesti ranka": "Enter manually", "📸 Ekrano nuotrauka su QR": "📸 Screenshot with QR", "Nustatymai": "Settings", "Kalba": "Language", "Tema": "Theme", "Šviesi": "Light", "Tamsi": "Dark", "Duomenys": "Data", "Kortelės saugomos tik šiame įrenginyje ir veikia be interneto.": "Cards are stored only on this device and work offline.", "Eksportuoti kopiją (JSON)": "Export backup (JSON)", "Importuoti kopiją (JSON)": "Import backup (JSON)", "Ištrinti visas korteles": "Delete all cards", "Rodyti pristatymą": "Show intro", "Pradžia": "Home", "Pridėti": "Add", "Redaguoti": "Edit", "Kortelės duomenys": "Card details", "Peržiūra atsiras čia": "Preview will appear here", "Parduotuvė (pvz., Maxima)": "Store (e.g. Tesco)", "Kortelės pavadinimas (nebūtina)": "Card name (optional)", "Barkodo numeris": "Barcode number", "Išplėstiniai nustatymai": "Advanced settings", "Tipas parenkamas automatiškai pagal numerį. Keiskite tik jei kasoje kodas neskaitomas arba reikia QR.": "The type is chosen automatically from the number. Change it only if the code will not scan at checkout, or if you need a QR.", "Spalva": "Colour", "🖼️ Pakeisti paveikslėlį": "🖼️ Change image", "🖼️ Įkelti savo paveikslėlį": "🖼️ Upload your own image", "Pašalinti": "Remove", "📸 Įkelti ekrano nuotrauką su kodu": "📸 Upload a screenshot with the code", "📸 Pakeisti ekrano nuotrauką su kodu": "📸 Change the screenshot", "Rodyti nuotrauką vietoj barkodo": "Show the photo instead of the barcode", "Išsaugoti": "Save", "Atšaukti": "Cancel", "↑ Aukščiau": "↑ Move up", "↓ Žemiau": "↓ Move down", "Ištrinti": "Delete", "☀️ Ryškumas": "☀️ Brightness", "Uždaryti": "Close", "Nepavyko išsaugoti": "Could not save", "Naršyklė nepalaiko skenavimo – įveskite ranka": "This browser cannot scan – enter manually", "Kamera nepasiekiama – įjunkite leidimą arba įveskite ranka": "Camera unavailable – allow access or enter manually", "Barkodas rastas": "Barcode found", "Barkodo neradome – įveskite numerį": "No barcode found – enter the number", "Įveskite numerį ranka": "Enter the number manually", "Nepavyko nuskaityti nuotraukos": "Could not read the photo", "Ištrinti šią kortelę?": "Delete this card?", "Ištrinta": "Deleted", "Perkelta": "Moved", "Ištrinti VISAS korteles?": "Delete ALL cards?", "Įveskite parduotuvės pavadinimą": "Enter the store name", "Įveskite numerį arba įkelkite nuotrauką": "Enter a number or upload a photo", "Kortelė išsaugota": "Card saved", "Bakstelėkite ekraną, kad grąžintumėte mygtukus": "Tap the screen to bring the buttons back", "Kodas atpažintas": "Code recognised", "Kodo neatpažinau – rodysiu nuotrauką": "Code not recognised – showing the photo", "Netinkamas failas": "Invalid file", "Importuota kortelių: ": "Cards imported: ", "Neteisingas kodas": "Invalid code", "Nepavyko nuskaityti paveikslėlio": "Could not read the image", "Lojalumo kortelė": "Loyalty card", "Reklama": "Ad", "Kortelių sąrašas": "Card list", "Kortelės pavadinimas (pvz., Maxima) *": "Card name (e.g. Tesco) *", "Įveskite kortelės pavadinimą": "Enter the card name", "Rodyti barkodą": "Show barcode", "Atgal": "Back", "Barkodo numeris (nebūtina)": "Barcode number (optional)", "Filtras": "Filter", "Visos": "All", "Nuskenuoti barkodą": "Scan barcode", "Nufotografuoti kortelę": "Take a photo of the card", "Ekrano nuotrauka su QR": "Screenshot with QR"};
 function T(s){return S.lang==='en'&&EN[s]?EN[s]:s}
 function tr(root){if(S.lang!=='en'||!root)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),ns=[];while(w.nextNode())ns.push(w.currentNode);
  ns.forEach(n=>{const v=n.nodeValue,k=v.trim();if(k&&EN[k])n.nodeValue=v.replace(k,EN[k])});
@@ -156,7 +182,7 @@ function bcSvg(v,t,h){ // returns svg markup string
  return el.outerHTML}
 function setTheme(){const r=document.documentElement;S.theme==='auto'?r.removeAttribute('data-theme'):r.setAttribute('data-theme',S.theme)}
 function go(v,o={}){stopCam();Object.assign(S,{view:v},o);render()}
-function ico(c){return c.image?`<img src="${c.image}" alt="">`:c.icon}
+function ico(c){return c.shot?`<img src="${c.shot}" alt="">`:c.image?`<img src="${c.image}" alt="">`:c.icon}
 function sub(c){return [c.cardName&&c.cardName!==c.merchantName?c.cardName:'',c.barcodeValue?c.barcodeValue.slice(-6):''].filter(Boolean).join(' · ')}
 function tile(c){return `<button class="tile" data-open="${c.id}" style="--c:${c.color}">
 <span class="ic">${ico(c)}</span><span class="tx"><b>${esc(c.merchantName)}</b><small>${esc(sub(c))}</small></span>
@@ -165,7 +191,7 @@ function list(cards,empty){return cards.length?`<div class="grid">${cards.map(ti
 function adHtml(){if(!AD.on||!AD.link||S.q)return '';const t=`<div class="tx2">${esc(AD.text)}</div>`;
  const inner=AD.img?`<img src="${esc(AD.img)}" alt="${esc(AD.text)}" data-fb="${esc(t)}" onerror="this.outerHTML=this.dataset.fb">`:t;
  return `<a class="ad" href="${esc(AD.link)}" target="_blank" rel="noopener noreferrer sponsored">${inner}<small>Reklama</small></a>`}
-function deck(cs){return `<div class="deck" id="deck">${cs.map((c,i)=>`<div class="wc" role="button" tabindex="0" data-open="${c.id}" data-i="${i}" style="--c:${c.color}"><div class="wt"><span class="wl">${ico(c)}</span><span class="fv${c.isFavorite?' on':''}" data-fav="${c.id}" role="button" aria-label="Mėgstamos">${c.isFavorite?'★':'☆'}</span></div><div class="wm"><span class="wn">${esc(c.merchantName)}</span>${c.cardName&&c.cardName!==c.merchantName?`<span class="wsub">${esc(c.cardName)}</span>`:''}</div><div class="wb"><span>${c.barcodeValue?'•••• '+esc(c.barcodeValue.slice(-4)):''}</span>${svg(IC.scan,18)}</div></div>`).join('')}</div>`}
+function deck(cs){return `<div class="deck" id="deck">${cs.map((c,i)=>`<div class="wc${c.shot?' has':''}" role="button" tabindex="0" data-open="${c.id}" data-i="${i}" style="--c:${c.color}">${c.shot?`<img class="wbg" src="${c.shot}" alt="">`:''}<div class="wt"><span class="wl">${c.image?`<img src="${c.image}" alt="">`:c.icon}</span><span class="fv${c.isFavorite?' on':''}" data-fav="${c.id}" role="button" aria-label="Mėgstamos">${c.isFavorite?'★':'☆'}</span></div><div class="wm"><span class="wn">${esc(c.merchantName)}</span>${c.cardName&&c.cardName!==c.merchantName?`<span class="wsub">${esc(c.cardName)}</span>`:''}</div><div class="wb"><span>${c.barcodeValue?'•••• '+esc(c.barcodeValue.slice(-4)):''}</span>${svg(IC.scan,18)}</div></div>`).join('')}</div>`}
 function deckFx(){const d=$('#deck');if(!d)return;const cs=[...d.children],mid=d.scrollTop+d.clientHeight/2;let best=0,bd=1e9;
  cs.forEach((c,i)=>{const dist=Math.abs(c.offsetTop+c.offsetHeight/2-mid),n=Math.min(1,dist/(c.offsetHeight*.9));c.style.setProperty('--d',n.toFixed(3));c.style.zIndex=100-Math.round(n*100);if(dist<bd){bd=dist;best=i}});
  cs.forEach((c,i)=>c.classList.toggle('on',i===best));S.ai=best}
@@ -182,6 +208,7 @@ function home(){
  (all.length?list(all):`<div class="empty">Nieko nerasta</div>`)}`}
 function favs(){const f=S.cards.filter(c=>c.isFavorite);return `<h1>Mėgstamos</h1>${f.length?deck(f):`<div class="empty">Pažymėkite kortelę žvaigždute ir ji atsiras čia.</div>`}`}
 function svg(p,s){s=s||22;return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`}
+function backBtn(){return `<button class="back" data-cancel>${svg('<path d="M15 5l-7 7 7 7"/>',20)}<span>Atgal</span></button>`}
 function opt(ic,t,a,pri){return `<button class="opt${pri?' pri':''}" ${a}><span class="oi">${svg(ic)}</span><span>${t}</span></button>`}
 function add(){return `<h1>Nauja kortelė</h1><div class="grid">${opt(IC.scan,'Nuskenuoti barkodą','data-go="scan"',1)}${opt(IC.cam,'Nufotografuoti kortelę','data-pick="ph"')}${opt(IC.kb,'Įvesti ranka','data-go="form"')}${opt(IC.shot,'Ekrano nuotrauka su QR','data-pick="sh"')}</div><input id="ph" type="file" accept="image/*" capture="environment" hidden><input id="sh" type="file" accept="image/*" hidden>`}
 function settings(){return `<h1>Nustatymai</h1><h2>Kalba</h2><div class="row"><button data-lang="lt" class="${S.lang==='lt'?'pri':''}">Lietuvių</button><button data-lang="en" class="${S.lang==='en'?'pri':''}">English</button></div><h2>Tema</h2><div class="row">${['auto','light','dark'].map(t=>`<button data-theme="${t}" class="${S.theme===t?'pri':''}">${{auto:'Auto',light:'Šviesi',dark:'Tamsi'}[t]}</button>`).join('')}</div>
@@ -190,16 +217,16 @@ function settings(){return `<h1>Nustatymai</h1><h2>Kalba</h2><div class="row"><b
 function form(){
  const d=S.draft||(S.draft={merchantName:'',cardName:'',barcodeValue:'',barcodeType:'code_128',color:COL[0],icon:ICO[0],isFavorite:false,image:null,auto:true});
  const ed=!!S.id;
- return `<h1>${ed?'Redaguoti':'Kortelės duomenys'}</h1>
+ return `${backBtn()}<h1>${ed?'Redaguoti':'Kortelės duomenys'}</h1>
  <div class="prev" id="pv">${pvHtml(d)}</div>
  <input id="fc" placeholder="Kortelės pavadinimas (pvz., Maxima) *" value="${esc(d.cardName)}" autofocus>
- <input id="fv" inputmode="text" placeholder="Barkodo numeris" value="${esc(d.barcodeValue)}">
- <details class="adv"><summary>Išplėstiniai nustatymai</summary><p>Tipas parenkamas automatiškai pagal numerį. Keiskite tik jei kasoje kodas neskaitomas arba reikia QR.</p><select id="ft">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${k===d.barcodeType?'selected':''}>${v[0]}</option>`).join('')}</select></details>
- <div class="sw" id="sc">${COL.map(c=>`<button data-c="${c}" style="background:${c}" class="${c===d.color?'on':''}" aria-label="Spalva"></button>`).join('')}</div>
- <div class="sw ics" id="si">${ICO.map(i=>`<button data-i="${i}" class="${i===d.icon?'on':''}">${i}</button>`).join('')}</div>
+ <input id="fv" inputmode="text" placeholder="${d.shot?'Barkodo numeris (nebūtina)':'Barkodo numeris'}" value="${esc(d.barcodeValue)}">
+ <details class="adv" ${d.shot?'hidden':''}><summary>Išplėstiniai nustatymai</summary><p>Tipas parenkamas automatiškai pagal numerį. Keiskite tik jei kasoje kodas neskaitomas arba reikia QR.</p><select id="ft">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${k===d.barcodeType?'selected':''}>${v[0]}</option>`).join('')}</select></details>
+ ${d.shot?'':`<div class="sw" id="sc">${COL.map(c=>`<button data-c="${c}" style="background:${c}" class="${c===d.color?'on':''}" aria-label="Spalva"></button>`).join('')}</div>`}
+ ${d.shot?'':`<div class="sw ics" id="si">${ICO.map(i=>`<button data-i="${i}" class="${i===d.icon?'on':''}">${i}</button>`).join('')}</div>
  ${d.image?`<img class="th" src="${d.image}" alt="">`:''}
  <div class="row" style="margin-bottom:12px"><button type="button" onclick="$('#im').click()">🖼️ ${d.image?'Pakeisti paveikslėlį':'Įkelti savo paveikslėlį'}</button>${d.image?`<button data-rmimg class="dng">Pašalinti</button>`:''}</div>
- <input id="im" type="file" accept="image/*" hidden>
+ <input id="im" type="file" accept="image/*" hidden>`}
  <div class="row" style="margin-bottom:12px"><button type="button" onclick="$('#sh').click()">📸 ${d.shot?'Pakeisti':'Įkelti'} ekrano nuotrauką su kodu</button>${d.shot?`<button data-rmshot class="dng">Pašalinti</button>`:''}</div>
  ${d.shot?`<label class="chk"><input type="checkbox" id="us" ${d.useShot?'checked':''}> Rodyti nuotrauką vietoj barkodo</label>`:''}
  <input id="sh" type="file" accept="image/*" hidden>
@@ -207,7 +234,7 @@ function form(){
  ${ed?`<div class="row" style="margin-top:10px"><button data-mv="-1">↑ Aukščiau</button><button data-mv="1">↓ Žemiau</button><button class="dng" data-del="${S.id}">Ištrinti</button></div>`:''}`}
 function view(){
  const c=S.cards.find(x=>x.id===S.id);if(!c)return '';
- return `<div class="full" id="fs" style="--c:${c.color}"><button class="x" data-close aria-label="Uždaryti">✕</button>
+ return `<div class="full" id="fs" style="--c:${c.color}"><button class="x" data-close aria-label="Uždaryti">${svg('<path d="M6 6l12 12M18 6L6 18"/>',22)}</button>
  ${c.image?`<img src="${c.image}" alt="" style="width:64px;height:64px;border-radius:16px;object-fit:cover;margin-bottom:8px">`:''}<div style="font-size:26px;font-weight:800;margin-bottom:2px">${esc(c.merchantName)}</div><div style="color:#555;margin-bottom:18px">${c.cardName&&c.cardName!==c.merchantName?esc(c.cardName):''}</div>
  ${c.useShot&&c.shot?`<img class="shot" src="${c.shot}" alt="">`:bcSvg(c.barcodeValue,c.barcodeType,140)}${c.barcodeValue&&!(c.useShot&&c.shot)?`<div style="font:600 24px ui-monospace,monospace;letter-spacing:.08em;margin-top:14px;word-break:break-all;text-align:center">${esc(c.barcodeValue)}</div>`:''}
  <div class="bar"><button data-bright>☀️ Ryškumas</button><button data-edit="${c.id}">Redaguoti</button><button data-del="${c.id}" style="color:#E5384F">Ištrinti</button></div></div>`}
@@ -278,7 +305,7 @@ document.addEventListener('click',e=>{
  if(D.skip!==undefined){S.ob=true;save();render();return}
  if(D.tab){S.tab=D.tab;S.view=D.tab;render();return}
  if(D.go){if(D.go==='form'){S.id=null;S.draft=null}go(D.go);return}
- if(D.cancel!==undefined){S.draft=null;S.id=null;go(S.tab==='add'?'home':S.tab,{tab:S.tab==='add'?'home':S.tab});return}
+ if(D.cancel!==undefined){const ed=!!S.id,v=S.view;S.draft=null;S.id=null;if(!ed&&(v==='form'||v==='scan')){go('add',{tab:'add'})}else go(S.tab==='add'?'home':S.tab,{tab:S.tab==='add'?'home':S.tab});return}
  if(D.close!==undefined){wake(false);go(S.tab==='add'?'home':S.tab,{id:null});return}
  if(D.bright!==undefined){$('#fs').classList.toggle('hide');toast('Bakstelėkite ekraną, kad grąžintumėte mygtukus');return}
  if(D.edit){const c=S.cards.find(x=>x.id===D.edit);wake(false);go('form',{id:c.id,draft:{...c,cardName:c.merchantName||c.cardName,auto:false}});return}
@@ -307,8 +334,8 @@ document.addEventListener('click',e=>{
 document.addEventListener('click',e=>{const f=$('#fs');if(f&&f.classList.contains('hide')&&!e.target.closest('button'))f.classList.remove('hide')});
 document.addEventListener('input',e=>{
  if(e.target.id==='q'){S.q=e.target.value;const p=e.target.selectionStart;render();const q=$('#q');q.focus();q.setSelectionRange(p,p)}
- if(e.target.id==='ft'){S.draft.auto=false}if(['fv','ft'].includes(e.target.id))upPrev()});
-document.addEventListener('change',e=>{if(e.target.id==='us'){S.draft.useShot=e.target.checked;upPrev()}if(e.target.id==='sh'){fromShot(e.target.files[0]);e.target.value=''}if(e.target.id==='imp'){importJson(e.target.files[0]);e.target.value=''}if(e.target.id==='im')fromLogo(e.target.files[0]);if(e.target.id==='ph')fromPhoto(e.target.files[0]);if(e.target.id==='ft'){S.draft.auto=false;upPrev()}});
-load();setTheme();render();if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+ if(e.target.id==='ft'){S.draft.auto=false}if(['fv','ft'].includes(e.target.id)){upPrev();const d=S.draft;if(e.target.id==='fv'&&d.shot&&d.useShot&&!d.usSet&&d.barcodeValue){d.useShot=false;const u=$('#us');if(u)u.checked=false;upPrev()}}});
+document.addEventListener('change',e=>{if(e.target.id==='us'){readForm();S.draft.usSet=true;S.draft.useShot=e.target.checked;render()}if(e.target.id==='sh'){fromShot(e.target.files[0]);e.target.value=''}if(e.target.id==='imp'){importJson(e.target.files[0]);e.target.value=''}if(e.target.id==='im')fromLogo(e.target.files[0]);if(e.target.id==='ph'){fromShot(e.target.files[0]);e.target.value=''}if(e.target.id==='ft'){S.draft.auto=false;upPrev()}});
+if(HW.on&&Date.now()<Date.parse(HW.until))document.body.classList.add('hw');load();setTheme();render();if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
 
 </script></body></html>
