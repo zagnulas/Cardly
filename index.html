@@ -336,6 +336,6 @@ document.addEventListener('input',e=>{
  if(e.target.id==='q'){S.q=e.target.value;const p=e.target.selectionStart;render();const q=$('#q');q.focus();q.setSelectionRange(p,p)}
  if(e.target.id==='ft'){S.draft.auto=false}if(['fv','ft'].includes(e.target.id)){upPrev();const d=S.draft;if(e.target.id==='fv'&&d.shot&&d.useShot&&!d.usSet&&d.barcodeValue){d.useShot=false;const u=$('#us');if(u)u.checked=false;upPrev()}}});
 document.addEventListener('change',e=>{if(e.target.id==='us'){readForm();S.draft.usSet=true;S.draft.useShot=e.target.checked;render()}if(e.target.id==='sh'){fromShot(e.target.files[0]);e.target.value=''}if(e.target.id==='imp'){importJson(e.target.files[0]);e.target.value=''}if(e.target.id==='im')fromLogo(e.target.files[0]);if(e.target.id==='ph'){fromShot(e.target.files[0]);e.target.value=''}if(e.target.id==='ft'){S.draft.auto=false;upPrev()}});
-if(HW.on&&Date.now()<Date.parse(HW.until))document.body.classList.add('hw');load();setTheme();render();if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+if(HW.on&&Date.now()<Date.parse(HW.until))document.body.classList.add('hw');load();setTheme();render();if("serviceWorker" in navigator&&location.protocol.startsWith("http")){const had=!!navigator.serviceWorker.controller;navigator.serviceWorker.addEventListener("controllerchange",()=>{if(had&&!window._rl){window._rl=1;location.reload()}});navigator.serviceWorker.register("sw.js").then(r=>r.update()).catch(()=>{})}
 
 </script></body></html>
