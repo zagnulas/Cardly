@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="lt"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#05070F">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Kortos">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<title>Kortos</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#EEF2FA;--fg:#0B1220;--mut:#5F6B85;--glass:rgba(255,255,255,.78);--glass2:rgba(255,255,255,.95);--ln:rgba(15,30,70,.10);--ac:#2F6BFF;--ac2:#14B8D4;--on:#fff;--sh:0 12px 30px -14px rgba(30,60,130,.28);--grad:linear-gradient(135deg,#3F6DFF,#22B8EE);--card:var(--glass)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#05070F;--fg:#F4F6FF;--mut:#8A93AB;--glass:rgba(255,255,255,.055);--glass2:rgba(255,255,255,.1);--ln:rgba(255,255,255,.10);--ac:#5B8CFF;--ac2:#22D3EE;--sh:0 14px 36px -16px rgba(0,0,0,.75)}}
+:root[data-theme=dark]{--bg:#05070F;--fg:#F4F6FF;--mut:#8A93AB;--glass:rgba(255,255,255,.055);--glass2:rgba(255,255,255,.1);--ln:rgba(255,255,255,.10);--ac:#5B8CFF;--ac2:#22D3EE;--sh:0 14px 36px -16px rgba(0,0,0,.75)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--fg);font:400 16px/1.4 'Inter',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(70% 42% at 50% 30%,rgba(63,109,255,.17),transparent 72%),radial-gradient(55% 34% at 100% 100%,rgba(139,108,255,.10),transparent 72%)}
+#app{height:100%;display:flex;flex-direction:column;max-width:520px;margin:auto}
+main{flex:1;overflow:auto;padding:12px 18px 24px}main::-webkit-scrollbar{display:none}
+h1{font-size:30px;font-weight:700;letter-spacing:-.03em;margin:8px 0 18px}
+h2{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin:22px 0 10px}
+button{font:inherit;font-size:15px;font-weight:600;color:inherit;cursor:pointer;min-height:48px;padding:0 18px;border-radius:14px;border:1px solid var(--ln);background:var(--glass);transition:transform .18s cubic-bezier(.2,.8,.2,1),background .2s,box-shadow .2s,border-color .2s}
+button:active{transform:scale(.97)}button:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.pri{background:var(--grad);color:#fff;border-color:transparent;box-shadow:0 10px 26px -10px rgba(59,108,255,.8),inset 0 1px 0 rgba(255,255,255,.3)}
+.dng{color:#FF6B7A}
+input,select{font:inherit;font-size:16px;width:100%;min-height:50px;padding:0 16px;border-radius:14px;border:1px solid var(--ln);background:var(--glass);color:var(--fg);margin-bottom:10px;transition:border-color .2s,box-shadow .2s}
+input::placeholder{color:var(--mut)}
+input:focus,select:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 4px rgba(91,140,255,.18)}
+.row{display:flex;gap:10px}.row>*{flex:1}.grid{display:grid;gap:10px}
+.sb{display:flex;gap:10px;margin-bottom:12px}
+.sb input{margin:0;flex:1;min-width:0;padding-left:44px;background-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%238A93AB%27%20stroke-width%3D%272%27%20stroke-linecap%3D%27round%27%3E%3Ccircle%20cx%3D%2711%27%20cy%3D%2711%27%20r%3D%277%27%2F%3E%3Cpath%20d%3D%27M20%2020l-3.5-3.5%27%2F%3E%3C%2Fsvg%3E");background-repeat:no-repeat;background-position:15px center;background-size:18px}
+.fb{flex:none;width:50px;min-height:50px;padding:0;display:flex;align-items:center;justify-content:center;position:relative}
+.fb.on{background:var(--grad);color:#fff;border-color:transparent}
+.fb i{position:absolute;right:8px;top:8px;width:10px;height:10px;border-radius:50%;border:2px solid #fff}
+.chips{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:0 0 14px}
+.chips button{width:36px;height:36px;min-height:0;padding:0;border-radius:50%;border:0}
+.chips button.on{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--ac)}
+.chips .clr{width:auto;padding:0 14px;border-radius:12px;font-size:13px;border:1px solid var(--ln)}
+.tile{display:flex;align-items:center;gap:14px;width:100%;min-height:68px;padding:10px 6px 10px 12px;border-radius:20px;text-align:left;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),var(--sh)}
+.tile:active{background:var(--glass2)}
+.tile .ic{flex:none;width:46px;height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden;color:#fff;background:var(--c);background:linear-gradient(145deg,var(--c),color-mix(in srgb,var(--c) 45%,#000));box-shadow:0 6px 16px -6px var(--c),inset 0 1px 0 rgba(255,255,255,.35)}
+.tile .ic img{width:100%;height:100%;object-fit:cover}
+.tile .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.tile b{font-size:16px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile small{font-size:12px;font-weight:500;color:var(--mut);font-variant-numeric:tabular-nums;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tile .fv{flex:none;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--mut)}.tile .fv.on{color:#FFC857}
+.opt{display:flex;align-items:center;justify-content:flex-start;gap:14px;min-height:64px;padding:0 14px;text-align:left;font-size:16px;border-radius:20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.07),var(--sh)}
+.opt::after{content:'›';margin-left:auto;font-size:22px;color:var(--mut)}
+.opt .oi{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;flex:none;background:rgba(91,140,255,.14);color:var(--ac)}
+.opt.pri{background:linear-gradient(135deg,rgba(63,109,255,.30),rgba(34,184,238,.14));border-color:rgba(91,140,255,.45);color:var(--fg);box-shadow:0 14px 34px -18px rgba(59,108,255,.9),inset 0 1px 0 rgba(255,255,255,.12)}
+.opt.pri .oi{background:var(--grad);color:#fff}
+nav{display:flex;align-items:center;margin:0 14px 10px;padding:6px;border-radius:26px;background:var(--glass);border:1px solid var(--ln);-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 18px 44px -16px rgba(0,0,0,.6)}
+nav button{flex:1;min-height:54px;padding:0;border:0;background:none;color:var(--mut);font-size:11px;display:flex;flex-direction:column;gap:3px;align-items:center;justify-content:center;border-radius:20px}
+nav button.on{color:var(--fg);background:rgba(91,140,255,.16)}nav button.on i{color:var(--ac)}
+nav i{display:flex;font-style:normal}
+nav .plus{flex:0 0 58px;min-height:0;height:50px;margin:0 6px;border-radius:18px;background:var(--grad);color:#fff;box-shadow:0 10px 24px -8px rgba(59,108,255,.85),inset 0 1px 0 rgba(255,255,255,.35)}
+.empty{text-align:center;color:var(--mut);padding:56px 20px}
+.sw{display:flex;gap:12px;flex-wrap:wrap;margin:4px 0 14px}
+.sw button{width:40px;height:40px;min-height:0;padding:0;border-radius:50%;border:0}.sw button.on{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--fg)}
+.sw.ics button{background:var(--glass);border:1px solid var(--ln);border-radius:12px;font-size:20px}.sw.ics button.on{border-color:var(--ac);box-shadow:0 0 0 3px rgba(91,140,255,.25)}
+.th{width:64px;height:64px;border-radius:16px;object-fit:cover;margin-bottom:10px;display:block}
+.chk{display:flex;gap:12px;align-items:center;margin-bottom:12px}.chk input{width:24px;min-height:24px;margin:0;accent-color:var(--ac)}
+.adv{margin-bottom:12px;border:1px solid var(--ln);border-radius:16px;padding:0 14px;background:var(--glass)}
+.adv summary{min-height:50px;display:flex;align-items:center;color:var(--mut);font-weight:600;cursor:pointer;list-style:none}.adv summary::-webkit-details-marker{display:none}
+.adv summary::after{content:'+';margin-left:auto;font-size:20px}.adv[open] summary::after{content:'–'}
+.adv p{color:var(--mut);font-size:14px;margin:0 0 10px}
+.prev{background:#fff;border-radius:18px;padding:14px;margin-bottom:12px;text-align:center;color:#000;box-shadow:var(--sh)}.prev svg{max-width:100%;height:90px}
+.ad{display:block;position:relative;margin:0 0 14px;overflow:hidden;border-radius:18px;border:1px solid var(--ln);background:var(--glass);color:var(--fg);text-decoration:none}
+.ad img{width:100%;height:76px;object-fit:cover;display:block}.ad .tx2{display:flex;align-items:center;justify-content:center;min-height:64px;padding:10px 44px;text-align:center;font-weight:600}
+.ad small{position:absolute;top:8px;left:8px;font-size:10px;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.55);color:#fff;letter-spacing:.04em}
+.full{position:fixed;inset:0;background:#fff;color:#0B1220;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;z-index:9;animation:up .32s cubic-bezier(.2,.8,.2,1)}
+.full svg{width:100%;max-width:520px;height:auto;max-height:58vh}.full img.shot{max-width:100%;max-height:64vh;object-fit:contain}
+.full .bar{position:absolute;bottom:0;left:0;right:0;display:flex;gap:10px;padding:12px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+.full .bar button{flex:1;background:#F0F2F7;color:#0B1220;border:0}
+.full .x{position:absolute;top:calc(12px + env(safe-area-inset-top,0px));right:14px;width:44px;min-height:0;height:44px;padding:0;border-radius:50%;background:#F0F2F7;color:#0B1220;border:0;font-size:18px}
+.full.hide .bar,.full.hide .x{display:none}
+.scan{position:fixed;inset:0;background:#000;z-index:8;display:flex;flex-direction:column}
+.scan video{flex:1;object-fit:cover;width:100%}
+.scan .fr{position:absolute;left:10%;right:10%;top:30%;height:26%;border-radius:24px;border:2px solid rgba(255,255,255,.85);box-shadow:0 0 0 999px rgba(5,7,15,.62);overflow:hidden}
+.scan .fr::after{content:'';position:absolute;left:8%;right:8%;top:0;height:2px;border-radius:2px;background:linear-gradient(90deg,transparent,#22D3EE,transparent);box-shadow:0 0 14px #22D3EE;animation:sl 2s ease-in-out infinite alternate}
+.scan .bar{position:absolute;bottom:0;left:0;right:0;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));display:flex;gap:10px}
+.scan .bar button{flex:1;background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.22);color:#fff;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);padding:11px 18px;border-radius:16px;background:var(--fg);color:var(--bg);font-size:14px;font-weight:500;z-index:20;box-shadow:var(--sh);max-width:90%;text-align:center;animation:fade .25s}
+.ob{display:flex;flex-direction:column;justify-content:center;height:100%;padding:32px;gap:16px;text-align:center}
+.ob .big{width:112px;height:112px;margin:0 auto 8px;border-radius:34px;display:flex;align-items:center;justify-content:center;color:#fff;background:var(--grad);box-shadow:0 24px 60px -18px rgba(59,108,255,.75),inset 0 1px 0 rgba(255,255,255,.35)}
+.ob h1{font-size:30px;margin:0}
+.dots{display:flex;gap:6px;justify-content:center;margin:6px 0}.dots i{width:7px;height:7px;border-radius:7px;background:rgba(138,147,171,.4);transition:width .3s}.dots i.on{width:24px;background:var(--ac)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}@keyframes fade{from{opacity:0}}@keyframes up{from{transform:translateY(30px);opacity:0}}@keyframes sl{to{top:calc(100% - 2px)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* wallet depth */
+.deck{position:relative;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;margin:4px -18px 0;padding:10px 7% 26px;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain}
+.deck::-webkit-scrollbar{display:none}
+.wc{--d:1;position:relative;flex:0 0 80%;aspect-ratio:1.586;scroll-snap-align:center;scroll-snap-stop:always;border-radius:22px;padding:16px 18px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;cursor:pointer;overflow:hidden;
+ background:var(--c);background:radial-gradient(130% 95% at 0% 0%,rgba(255,255,255,.26),transparent 55%),linear-gradient(150deg,color-mix(in srgb,var(--c) 92%,#000),color-mix(in srgb,var(--c) 38%,#000));
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),inset 0 1px 0 rgba(255,255,255,.4),0 26px 38px -20px rgba(0,0,0,.75),0 10px 18px -10px color-mix(in srgb,var(--c) 55%,transparent);
+ transform:scale(calc(1 - .1*var(--d)));opacity:calc(1 - .45*var(--d));filter:brightness(calc(1 - .32*var(--d)))}
+.wc+.wc{margin-left:-10px}
+.wc::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:linear-gradient(112deg,transparent 40%,rgba(255,255,255,.14) 50%,transparent 60%) 160% 0/260% 100% no-repeat;transition:opacity .5s}
+.wc.on::after{opacity:1;animation:sheen 10s ease-in-out infinite}
+@keyframes sheen{0%,50%{background-position:160% 0}100%{background-position:-70% 0}}
+.wt{display:flex;align-items:center;justify-content:space-between}
+.wl{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:20px;background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}.wl img{width:100%;height:100%;object-fit:cover}
+.wc .fv{width:44px;height:44px;margin:-6px -10px -6px 0;display:flex;align-items:center;justify-content:center;font-size:20px;color:rgba(255,255,255,.75)}.wc .fv.on{color:#FFD97A}
+.wm{min-width:0}
+.wn,.wsub{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wn{font-size:22px;font-weight:700;letter-spacing:-.02em;line-height:1.15;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.wsub{font-size:13px;font-weight:500;opacity:.8;margin-top:2px}
+.wb{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:600;letter-spacing:.12em;opacity:.85;font-variant-numeric:tabular-nums}
+.cta{width:100%;min-height:56px;font-size:17px;font-weight:600;border-radius:18px;display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 4px;background:linear-gradient(135deg,#4F7BFF,#2E5CEB 55%,#2593E0);border:1px solid rgba(255,255,255,.22);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 16px 30px -14px rgba(46,92,235,.85)}
+h1{font-size:34px;line-height:1.1;letter-spacing:-.035em;margin:10px 0 20px}
+h2{font-size:11px;letter-spacing:.12em;margin:26px 0 12px}
+.tile{background-image:linear-gradient(180deg,rgba(255,255,255,.05),transparent);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 12px 24px -16px rgba(0,0,0,.7)}
+.tile small{font-size:13px}
+input,select{box-shadow:inset 0 1px 3px rgba(0,0,0,.18)}
+.full{background:#fff;background:linear-gradient(180deg,color-mix(in srgb,var(--c,#3F6DFF) 16%,#fff),#fff 40%)}
+@keyframes up{from{transform:translateY(28px) scale(.985);opacity:0}}
+
+/* vertical deck */
+.deck{flex-direction:column;overflow-x:hidden;overflow-y:auto;scroll-snap-type:y mandatory;height:min(60vh,540px);padding:0 7%;margin:0 -18px;overscroll-behavior:contain}
+.wc{flex:0 0 auto;width:84%;align-self:center}
+.wc+.wc{margin-left:0;margin-top:-14px}
+</style></head><body><div id="app"></div>
+<script>
+/* BANERIS: keiskite tik cia. img = paveikslelio failas (pvz. 'banner.png') arba tuscia; link = kur nukreipia; on:false isjungia */
+const AD={on:true,img:'',link:'https://example.com',text:'Jūsų reklama čia'};
+const COL=['#3F6DFF','#22B8EE','#8B6CFF','#F25C8A','#F5A524','#2FC98E','#F2674F','#6B7690'];
+const ICO=['🛒','🛍️','☕','⛽','💊','🍔','👕','📚','🐾','🎬','✈️','💳'];
+const TYPES={ean_13:['EAN-13','EAN13'],ean_8:['EAN-8','EAN8'],code_128:['Code 128','CODE128'],code_39:['Code 39','CODE39'],upc_a:['UPC-A','UPC'],upc_e:['UPC-E','UPC'],itf:['ITF','ITF'],qr_code:['QR Code','']};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let S={cards:[],view:'home',q:'',id:null,draft:null,tab:'home',ob:false,theme:'dark',lang:null,fc:null,fo:false,stream:null};
+const load=()=>{try{const d=JSON.parse(localStorage.getItem('kortos')||'{}');S.cards=d.cards||[];S.theme=d.v>=2?(d.theme||'dark'):'dark';S.lang=d.lang||null;S.ob=!!d.ob}catch(e){}};
+const save=()=>{try{localStorage.setItem('kortos',JSON.stringify({v:2,cards:S.cards,theme:S.theme,ob:S.ob,lang:S.lang}))}catch(e){toast('Nepavyko išsaugoti')}};
+const EN={"Visos kortelės vienoje vietoje": "All your cards in one place", "Nuskenuokite fizines korteles": "Scan your physical cards", "Parodykite jas iškart kasoje": "Show them instantly at checkout", "Toliau": "Next", "Leisti kamerą ir pradėti": "Allow camera and start", "Praleisti": "Skip", "Kortos": "Cards", "Ieškoti pagal pavadinimą": "Search by name", "Dar nėra kortelių.": "No cards yet.", "Pridėti pirmą kortelę": "Add your first card", "Mėgstamos": "Favorites", "Visos kortelės": "All cards", "Kortelės": "Cards", "Nieko nerasta": "Nothing found", "Pažymėkite kortelę žvaigždute ir ji atsiras čia.": "Star a card and it will appear here.", "Nauja kortelė": "New card", "📷 Nuskenuoti barkodą": "📷 Scan barcode", "🖼️ Nufotografuoti kortelę": "🖼️ Take a photo of the card", "⌨️ Įvesti ranka": "⌨️ Enter manually", "Įvesti ranka": "Enter manually", "📸 Ekrano nuotrauka su QR": "📸 Screenshot with QR", "Nustatymai": "Settings", "Kalba": "Language", "Tema": "Theme", "Šviesi": "Light", "Tamsi": "Dark", "Duomenys": "Data", "Kortelės saugomos tik šiame įrenginyje ir veikia be interneto.": "Cards are stored only on this device and work offline.", "Eksportuoti kopiją (JSON)": "Export backup (JSON)", "Importuoti kopiją (JSON)": "Import backup (JSON)", "Ištrinti visas korteles": "Delete all cards", "Rodyti pristatymą": "Show intro", "Pradžia": "Home", "Pridėti": "Add", "Redaguoti": "Edit", "Kortelės duomenys": "Card details", "Peržiūra atsiras čia": "Preview will appear here", "Parduotuvė (pvz., Maxima)": "Store (e.g. Tesco)", "Kortelės pavadinimas (nebūtina)": "Card name (optional)", "Barkodo numeris": "Barcode number", "Išplėstiniai nustatymai": "Advanced settings", "Tipas parenkamas automatiškai pagal numerį. Keiskite tik jei kasoje kodas neskaitomas arba reikia QR.": "The type is chosen automatically from the number. Change it only if the code will not scan at checkout, or if you need a QR.", "Spalva": "Colour", "🖼️ Pakeisti paveikslėlį": "🖼️ Change image", "🖼️ Įkelti savo paveikslėlį": "🖼️ Upload your own image", "Pašalinti": "Remove", "📸 Įkelti ekrano nuotrauką su kodu": "📸 Upload a screenshot with the code", "📸 Pakeisti ekrano nuotrauką su kodu": "📸 Change the screenshot", "Rodyti nuotrauką vietoj barkodo": "Show the photo instead of the barcode", "Išsaugoti": "Save", "Atšaukti": "Cancel", "↑ Aukščiau": "↑ Move up", "↓ Žemiau": "↓ Move down", "Ištrinti": "Delete", "☀️ Ryškumas": "☀️ Brightness", "Uždaryti": "Close", "Nepavyko išsaugoti": "Could not save", "Naršyklė nepalaiko skenavimo – įveskite ranka": "This browser cannot scan – enter manually", "Kamera nepasiekiama – įjunkite leidimą arba įveskite ranka": "Camera unavailable – allow access or enter manually", "Barkodas rastas": "Barcode found", "Barkodo neradome – įveskite numerį": "No barcode found – enter the number", "Įveskite numerį ranka": "Enter the number manually", "Nepavyko nuskaityti nuotraukos": "Could not read the photo", "Ištrinti šią kortelę?": "Delete this card?", "Ištrinta": "Deleted", "Perkelta": "Moved", "Ištrinti VISAS korteles?": "Delete ALL cards?", "Įveskite parduotuvės pavadinimą": "Enter the store name", "Įveskite numerį arba įkelkite nuotrauką": "Enter a number or upload a photo", "Kortelė išsaugota": "Card saved", "Bakstelėkite ekraną, kad grąžintumėte mygtukus": "Tap the screen to bring the buttons back", "Kodas atpažintas": "Code recognised", "Kodo neatpažinau – rodysiu nuotrauką": "Code not recognised – showing the photo", "Netinkamas failas": "Invalid file", "Importuota kortelių: ": "Cards imported: ", "Neteisingas kodas": "Invalid code", "Nepavyko nuskaityti paveikslėlio": "Could not read the image", "Lojalumo kortelė": "Loyalty card", "Reklama": "Ad", "Kortelių sąrašas": "Card list", "Kortelės pavadinimas (pvz., Maxima) *": "Card name (e.g. Tesco) *", "Įveskite kortelės pavadinimą": "Enter the card name", "Rodyti barkodą": "Show barcode", "Filtras": "Filter", "Visos": "All", "Nuskenuoti barkodą": "Scan barcode", "Nufotografuoti kortelę": "Take a photo of the card", "Ekrano nuotrauka su QR": "Screenshot with QR"};
+function T(s){return S.lang==='en'&&EN[s]?EN[s]:s}
+function tr(root){if(S.lang!=='en'||!root)return;const w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),ns=[];while(w.nextNode())ns.push(w.currentNode);
+ ns.forEach(n=>{const v=n.nodeValue,k=v.trim();if(k&&EN[k])n.nodeValue=v.replace(k,EN[k])});
+ root.querySelectorAll('[placeholder],[aria-label]').forEach(e=>['placeholder','aria-label'].forEach(a=>{const v=e.getAttribute(a);if(v&&EN[v])e.setAttribute(a,EN[v])}))}
+function setLang(){document.documentElement.lang=S.lang==='en'?'en':'lt'}
+function langScreen(){return `<div class="ob"><div class="big">${svg(IC.globe,46)}</div><h1>Language · Kalba</h1><button class="pri" data-lang="en">English</button><button class="pri" data-lang="lt">Lietuvių</button></div>`}
+const IC={card:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h4"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',home:'<path d="M3 11l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',plus:'<path d="M12 5v14M5 12h14"/>',star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',set:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>',scan:'<path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3M7 12h10"/>',cam:'<path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/>',kb:'<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M7 10h.01M11 10h.01M15 10h.01M7 14h10"/>',shot:'<rect x="7" y="3" width="10" height="18" rx="2"/><path d="M10 7h4v4h-4z"/>'};
+function toast(t){const e=document.createElement('div');e.className='toast';e.textContent=T(t);document.body.append(e);setTimeout(()=>e.remove(),2200)}
+function bcSvg(v,t,h){ // returns svg markup string
+ if(t==='qr_code'){const q=qrcode(0,'M');q.addData(v);q.make();return q.createSvgTag({cellSize:6,margin:2,scalable:true})}
+ const el=document.createElementNS('http://www.w3.org/2000/svg','svg');
+ const opt={format:TYPES[t]?TYPES[t][1]:'CODE128',displayValue:false,height:h||90,margin:8,width:3,background:'#fff',lineColor:'#000'};
+ try{JsBarcode(el,v,{...opt,valid:x=>{if(!x)throw 1}})}catch(e){try{JsBarcode(el,v,{...opt,format:'CODE128'})}catch(e2){return '<p>Neteisingas kodas</p>'}}
+ return el.outerHTML}
+function setTheme(){const r=document.documentElement;S.theme==='auto'?r.removeAttribute('data-theme'):r.setAttribute('data-theme',S.theme)}
+function go(v,o={}){stopCam();Object.assign(S,{view:v},o);render()}
+function ico(c){return c.image?`<img src="${c.image}" alt="">`:c.icon}
+function sub(c){return [c.cardName&&c.cardName!==c.merchantName?c.cardName:'',c.barcodeValue?c.barcodeValue.slice(-6):''].filter(Boolean).join(' · ')}
+function tile(c){return `<button class="tile" data-open="${c.id}" style="--c:${c.color}">
+<span class="ic">${ico(c)}</span><span class="tx"><b>${esc(c.merchantName)}</b><small>${esc(sub(c))}</small></span>
+<span class="fv${c.isFavorite?' on':''}" data-fav="${c.id}" role="button" aria-label="Mėgstamos">${c.isFavorite?'★':'☆'}</span></button>`}
+function list(cards,empty){return cards.length?`<div class="grid">${cards.map(tile).join('')}</div>`:`<div class="empty">${empty}</div>`}
+function adHtml(){if(!AD.on||!AD.link||S.q)return '';const t=`<div class="tx2">${esc(AD.text)}</div>`;
+ const inner=AD.img?`<img src="${esc(AD.img)}" alt="${esc(AD.text)}" data-fb="${esc(t)}" onerror="this.outerHTML=this.dataset.fb">`:t;
+ return `<a class="ad" href="${esc(AD.link)}" target="_blank" rel="noopener noreferrer sponsored">${inner}<small>Reklama</small></a>`}
+function deck(cs){return `<div class="deck" id="deck">${cs.map((c,i)=>`<div class="wc" role="button" tabindex="0" data-open="${c.id}" data-i="${i}" style="--c:${c.color}"><div class="wt"><span class="wl">${ico(c)}</span><span class="fv${c.isFavorite?' on':''}" data-fav="${c.id}" role="button" aria-label="Mėgstamos">${c.isFavorite?'★':'☆'}</span></div><div class="wm"><span class="wn">${esc(c.merchantName)}</span>${c.cardName&&c.cardName!==c.merchantName?`<span class="wsub">${esc(c.cardName)}</span>`:''}</div><div class="wb"><span>${c.barcodeValue?'•••• '+esc(c.barcodeValue.slice(-4)):''}</span>${svg(IC.scan,18)}</div></div>`).join('')}</div>`}
+function deckFx(){const d=$('#deck');if(!d)return;const cs=[...d.children],mid=d.scrollTop+d.clientHeight/2;let best=0,bd=1e9;
+ cs.forEach((c,i)=>{const dist=Math.abs(c.offsetTop+c.offsetHeight/2-mid),n=Math.min(1,dist/(c.offsetHeight*.9));c.style.setProperty('--d',n.toFixed(3));c.style.zIndex=100-Math.round(n*100);if(dist<bd){bd=dist;best=i}});
+ cs.forEach((c,i)=>c.classList.toggle('on',i===best));S.ai=best}
+function initDeck(){const d=$('#deck');if(!d)return;const k=d.children,c=k[Math.min(S.ai||0,k.length-1)];d.style.paddingBlock=Math.max(0,(d.clientHeight-c.offsetHeight)/2)+'px';d.scrollTop=c.offsetTop-(d.clientHeight-c.offsetHeight)/2;deckFx();let f=0;
+ d.addEventListener('scroll',()=>{if(f)return;f=requestAnimationFrame(()=>{f=0;deckFx()})},{passive:true})}
+function sbar(cols){const f=`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>`;
+ return `<div class="sb"><input id="q" type="search" placeholder="Ieškoti pagal pavadinimą" value="${esc(S.q)}"><button class="fb ${S.fc?'on':''}" data-fopen aria-label="Filtras">${f}${S.fc?`<i style="background:${S.fc}"></i>`:''}</button></div>`+
+ (S.fo?`<div class="chips">${cols.map(c=>`<button data-fc="${c}" style="background:${c}" class="${S.fc===c?'on':''}" aria-label="Spalva"></button>`).join('')}<button class="clr" data-fc="">Visos</button></div>`:'')}
+function home(){
+ const cols=[...new Set(S.cards.map(c=>c.color))];if(S.fc&&!cols.includes(S.fc))S.fc=null;const q=S.q.toLowerCase(),m=c=>(!S.fc||c.color===S.fc)&&(!q||[c.merchantName,c.cardName].some(x=>(x||'').toLowerCase().includes(q)));
+ const all=S.cards.filter(m),fav=all.filter(c=>c.isFavorite),rest=all.filter(c=>!c.isFavorite);
+ return `<h1>Kortelių sąrašas</h1>${adHtml()}${sbar(cols)}
+ ${!S.cards.length?`<div class="empty"><p>Dar nėra kortelių.</p><button class="pri" data-go="add">Pridėti pirmą kortelę</button></div>`:
+ (all.length?list(all):`<div class="empty">Nieko nerasta</div>`)}`}
+function favs(){const f=S.cards.filter(c=>c.isFavorite);return `<h1>Mėgstamos</h1>${f.length?deck(f):`<div class="empty">Pažymėkite kortelę žvaigždute ir ji atsiras čia.</div>`}`}
+function svg(p,s){s=s||22;return `<svg viewBox="0 0 24 24" width="${s}" height="${s}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`}
+function opt(ic,t,a,pri){return `<button class="opt${pri?' pri':''}" ${a}><span class="oi">${svg(ic)}</span><span>${t}</span></button>`}
+function add(){return `<h1>Nauja kortelė</h1><div class="grid">${opt(IC.scan,'Nuskenuoti barkodą','data-go="scan"',1)}${opt(IC.cam,'Nufotografuoti kortelę','data-pick="ph"')}${opt(IC.kb,'Įvesti ranka','data-go="form"')}${opt(IC.shot,'Ekrano nuotrauka su QR','data-pick="sh"')}</div><input id="ph" type="file" accept="image/*" capture="environment" hidden><input id="sh" type="file" accept="image/*" hidden>`}
+function settings(){return `<h1>Nustatymai</h1><h2>Kalba</h2><div class="row"><button data-lang="lt" class="${S.lang==='lt'?'pri':''}">Lietuvių</button><button data-lang="en" class="${S.lang==='en'?'pri':''}">English</button></div><h2>Tema</h2><div class="row">${['auto','light','dark'].map(t=>`<button data-theme="${t}" class="${S.theme===t?'pri':''}">${{auto:'Auto',light:'Šviesi',dark:'Tamsi'}[t]}</button>`).join('')}</div>
+<h2>Duomenys</h2><p style="color:var(--mut)">Kortelės saugomos tik šiame įrenginyje ir veikia be interneto.</p>
+<div class="grid"><button data-exp>Eksportuoti kopiją (JSON)</button><button data-imp>Importuoti kopiją (JSON)</button><input id="imp" type="file" accept=".json,application/json" hidden><button class="dng" data-clr>Ištrinti visas korteles</button><button data-ob>Rodyti pristatymą</button></div>`}
+function form(){
+ const d=S.draft||(S.draft={merchantName:'',cardName:'',barcodeValue:'',barcodeType:'code_128',color:COL[0],icon:ICO[0],isFavorite:false,image:null,auto:true});
+ const ed=!!S.id;
+ return `<h1>${ed?'Redaguoti':'Kortelės duomenys'}</h1>
+ <div class="prev" id="pv">${pvHtml(d)}</div>
+ <input id="fc" placeholder="Kortelės pavadinimas (pvz., Maxima) *" value="${esc(d.cardName)}" autofocus>
+ <input id="fv" inputmode="text" placeholder="Barkodo numeris" value="${esc(d.barcodeValue)}">
+ <details class="adv"><summary>Išplėstiniai nustatymai</summary><p>Tipas parenkamas automatiškai pagal numerį. Keiskite tik jei kasoje kodas neskaitomas arba reikia QR.</p><select id="ft">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${k===d.barcodeType?'selected':''}>${v[0]}</option>`).join('')}</select></details>
+ <div class="sw" id="sc">${COL.map(c=>`<button data-c="${c}" style="background:${c}" class="${c===d.color?'on':''}" aria-label="Spalva"></button>`).join('')}</div>
+ <div class="sw ics" id="si">${ICO.map(i=>`<button data-i="${i}" class="${i===d.icon?'on':''}">${i}</button>`).join('')}</div>
+ ${d.image?`<img class="th" src="${d.image}" alt="">`:''}
+ <div class="row" style="margin-bottom:12px"><button type="button" onclick="$('#im').click()">🖼️ ${d.image?'Pakeisti paveikslėlį':'Įkelti savo paveikslėlį'}</button>${d.image?`<button data-rmimg class="dng">Pašalinti</button>`:''}</div>
+ <input id="im" type="file" accept="image/*" hidden>
+ <div class="row" style="margin-bottom:12px"><button type="button" onclick="$('#sh').click()">📸 ${d.shot?'Pakeisti':'Įkelti'} ekrano nuotrauką su kodu</button>${d.shot?`<button data-rmshot class="dng">Pašalinti</button>`:''}</div>
+ ${d.shot?`<label class="chk"><input type="checkbox" id="us" ${d.useShot?'checked':''}> Rodyti nuotrauką vietoj barkodo</label>`:''}
+ <input id="sh" type="file" accept="image/*" hidden>
+ <div class="row"><button class="pri" id="sv">Išsaugoti</button><button data-cancel>Atšaukti</button></div>
+ ${ed?`<div class="row" style="margin-top:10px"><button data-mv="-1">↑ Aukščiau</button><button data-mv="1">↓ Žemiau</button><button class="dng" data-del="${S.id}">Ištrinti</button></div>`:''}`}
+function view(){
+ const c=S.cards.find(x=>x.id===S.id);if(!c)return '';
+ return `<div class="full" id="fs" style="--c:${c.color}"><button class="x" data-close aria-label="Uždaryti">✕</button>
+ ${c.image?`<img src="${c.image}" alt="" style="width:64px;height:64px;border-radius:16px;object-fit:cover;margin-bottom:8px">`:''}<div style="font-size:26px;font-weight:800;margin-bottom:2px">${esc(c.merchantName)}</div><div style="color:#555;margin-bottom:18px">${c.cardName&&c.cardName!==c.merchantName?esc(c.cardName):''}</div>
+ ${c.useShot&&c.shot?`<img class="shot" src="${c.shot}" alt="">`:bcSvg(c.barcodeValue,c.barcodeType,140)}${c.barcodeValue&&!(c.useShot&&c.shot)?`<div style="font:600 24px ui-monospace,monospace;letter-spacing:.08em;margin-top:14px;word-break:break-all;text-align:center">${esc(c.barcodeValue)}</div>`:''}
+ <div class="bar"><button data-bright>☀️ Ryškumas</button><button data-edit="${c.id}">Redaguoti</button><button data-del="${c.id}" style="color:#E5384F">Ištrinti</button></div></div>`}
+function scan(){return `<div class="scan"><video id="vd" playsinline muted></video><div class="fr"></div><div class="bar"><button data-cancel style="flex:1">Atšaukti</button><button data-go="form" style="flex:1">Įvesti ranka</button></div></div>`}
+function onboard(){const P=[[IC.card,'Visos kortelės vienoje vietoje'],[IC.scan,'Nuskenuokite fizines korteles','Parodykite jas iškart kasoje']];const i=S.ob_i||0;
+ return `<div class="ob"><div class="big">${svg(P[i][0],46)}</div><h1>${P[i][1]}</h1>${P[i][2]?`<p style="font-size:20px;margin:0;color:var(--mut)">${P[i][2]}</p>`:''}<div class="dots">${P.map((_,k)=>`<i class="${k===i?'on':''}"></i>`).join('')}</div>
+ <button class="pri" data-next>${i<1?'Toliau':'Leisti kamerą ir pradėti'}</button><button data-skip style="background:none;color:var(--mut)">Praleisti</button></div>`}
+function render(){render0();tr($('#app'));setLang();const k=S.view+'|'+S.tab,m=$('main');if(m&&k!==S._k)m.classList.add('in');S._k=k;initDeck()}
+function render0(){
+ const a=$('#app');
+ if(!S.lang){a.innerHTML=langScreen();return}
+ if(!S.ob){a.innerHTML=onboard();return}
+ if(S.view==='scan'){a.innerHTML=scan();startCam();return}
+ const body={home,favorites:favs,add,settings,form}[S.view==='card'?S.tab:S.view]||home;
+ const nav=['home','favorites','settings'];
+ a.innerHTML=`<main>${body()}</main><nav>
+ <button data-tab="home" class="${S.tab==='home'?'on':''}"><i>${svg(IC.home)}</i>Pradžia</button>
+ <button data-tab="add" class="plus" aria-label="Pridėti"><i>${svg(IC.plus)}</i></button>
+ <button data-tab="favorites" class="${S.tab==='favorites'?'on':''}"><i>${svg(IC.star)}</i>Mėgstamos</button>
+ <button data-tab="settings" class="${S.tab==='settings'?'on':''}"><i>${svg(IC.set)}</i>Nustatymai</button></nav>${S.view==='card'?view():''}`;
+ if(S.view==='card')wake(true)}
+let wl=null;async function wake(on){try{if(on&&navigator.wakeLock)wl=await navigator.wakeLock.request('screen');else if(wl){wl.release();wl=null}}catch(e){}}
+function stopCam(){if(S.stream){S.stream.getTracks().forEach(t=>t.stop());S.stream=null}}
+async function startCam(){
+ if(!('BarcodeDetector' in window)){toast('Naršyklė nepalaiko skenavimo – įveskite ranka');go('form');return}
+ try{S.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});const v=$('#vd');v.srcObject=S.stream;await v.play();
+ const det=new BarcodeDetector({formats:Object.keys(TYPES)});
+ const tick=async()=>{if(!S.stream||S.view!=='scan')return;try{const r=await det.detect(v);if(r.length){found(r[0]);return}}catch(e){}setTimeout(tick,120)};tick()}
+ catch(e){toast('Kamera nepasiekiama – įjunkite leidimą arba įveskite ranka');go('form')}}
+function found(r){navigator.vibrate&&navigator.vibrate(60);go('form',{id:null,draft:{merchantName:'',cardName:'',barcodeValue:r.rawValue,barcodeType:TYPES[r.format]?r.format:'code_128',color:COL[0],icon:ICO[0],isFavorite:false,image:null,auto:false}})}
+async function fromPhoto(f){
+ if(!f)return;const draft={merchantName:'',cardName:'',barcodeValue:'',barcodeType:'code_128',color:COL[0],icon:ICO[0],isFavorite:false,image:null};
+ try{if('BarcodeDetector' in window){const bm=await createImageBitmap(f);const r=await new BarcodeDetector({formats:Object.keys(TYPES)}).detect(bm);
+ if(r.length){draft.barcodeValue=r[0].rawValue;draft.barcodeType=r[0].format;draft.auto=false;toast('Barkodas rastas')}else toast('Barkodo neradome – įveskite numerį')}else toast('Įveskite numerį ranka')}catch(e){toast('Nepavyko nuskaityti nuotraukos')}
+ go('form',{id:null,draft})}
+function loadImg(f){return new Promise(ok=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>ok(null);i.src=r.result};r.onerror=()=>ok(null);r.readAsDataURL(f)})}
+async function fromLogo(f){if(!f)return;readForm();const im=await loadImg(f);if(!im){toast('Nepavyko nuskaityti paveikslėlio');return}
+ const n=160,c=document.createElement('canvas');c.width=c.height=n;const x=c.getContext('2d'),m=Math.min(im.width,im.height);
+ x.drawImage(im,(im.width-m)/2,(im.height-m)/2,m,m,0,0,n,n);S.draft.image=c.toDataURL('image/png');render()}
+function pvHtml(d){return d.useShot&&d.shot?`<img src="${d.shot}" alt="" style="max-width:100%;max-height:170px">`:(d.barcodeValue?bcSvg(d.barcodeValue,d.barcodeType,80):'<small>Peržiūra atsiras čia</small>')}
+async function fromShot(f){
+ if(!f)return;const inForm=S.view==='form';if(inForm)readForm();
+ const d=inForm?S.draft:{merchantName:'',cardName:'',barcodeValue:'',barcodeType:'code_128',color:COL[0],icon:ICO[0],isFavorite:false,image:null,auto:true};
+ const im=await loadImg(f);
+ if(!im){toast('Nepavyko nuskaityti nuotraukos');return}
+ const draw=m=>{const k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);return c};
+ const big=draw(1600);let hit=null;
+ try{if('BarcodeDetector' in window){const r=await new BarcodeDetector({formats:Object.keys(TYPES)}).detect(big);if(r.length)hit={v:r[0].rawValue,t:r[0].format}}}catch(e){}
+ if(!hit&&typeof jsQR==='function'){const x=big.getContext('2d').getImageData(0,0,big.width,big.height),q=jsQR(x.data,x.width,x.height,{inversionAttempts:'attemptBoth'});if(q)hit={v:q.data,t:'qr_code'}}
+ d.shot=draw(1200).toDataURL('image/jpeg',.85);
+ if(hit){d.barcodeValue=hit.v;d.barcodeType=TYPES[hit.t]?hit.t:'qr_code';d.auto=false;d.useShot=false;toast('Kodas atpažintas')}
+ else{d.useShot=true;toast('Kodo neatpažinau – rodysiu nuotrauką')}
+ go('form',{id:inForm?S.id:null,draft:d})}
+async function importJson(f){if(!f)return;try{const a=JSON.parse(await f.text());if(!Array.isArray(a))throw 0;const ids=new Set(S.cards.map(c=>c.id));let n=0;
+ for(const c of a){if(c&&c.merchantName&&(c.barcodeValue||c.shot)&&!ids.has(c.id)){S.cards.push({...c,id:c.id||'c'+Date.now().toString(36)+n});n++}}
+ save();render();toast(T('Importuota kortelių: ')+n)}catch(e){toast('Netinkamas failas')}}
+function readForm(){const d=S.draft;d.cardName=$('#fc').value.trim();d.merchantName=d.cardName;d.barcodeValue=$('#fv').value.trim();d.barcodeType=$('#ft').value}
+function gsOk(v){let t=0;const n=v.length;for(let i=0;i<n-1;i++)t+=+v[n-2-i]*(i%2?1:3);return (10-t%10)%10==+v[n-1]}
+function guess(v){if(/^\d+$/.test(v)&&[8,12,13].includes(v.length)&&gsOk(v))return {8:'ean_8',12:'upc_a',13:'ean_13'}[v.length];return 'code_128'}
+function upPrev(){readForm();if(S.draft.auto!==false&&S.draft.barcodeValue){S.draft.barcodeType=guess(S.draft.barcodeValue);$('#ft').value=S.draft.barcodeType}$('#pv').innerHTML=pvHtml(S.draft);tr($('#pv'))}
+function del(id){if(confirm(T('Ištrinti šią kortelę?'))){S.cards=S.cards.filter(c=>c.id!==id);save();wake(false);go('home',{tab:'home',id:null});toast('Ištrinta')}}
+document.addEventListener('click',e=>{
+ const t=e.target.closest('button,[data-fav],[data-open]');if(!t)return;const D=t.dataset;
+ if(D.fav){e.stopPropagation();const c=S.cards.find(x=>x.id===D.fav);c.isFavorite=!c.isFavorite;save();render();return}
+ if(D.open){go('card',{id:D.open});return}
+ if(D.lang){S.lang=D.lang;save();render();return}
+ if(D.next!==undefined){if((S.ob_i||0)<1){S.ob_i=(S.ob_i||0)+1;render()}else{S.ob=true;save();navigator.mediaDevices&&navigator.mediaDevices.getUserMedia({video:true}).then(s=>s.getTracks().forEach(x=>x.stop())).catch(()=>{});render()}return}
+ if(D.skip!==undefined){S.ob=true;save();render();return}
+ if(D.tab){S.tab=D.tab;S.view=D.tab;render();return}
+ if(D.go){if(D.go==='form'){S.id=null;S.draft=null}go(D.go);return}
+ if(D.cancel!==undefined){S.draft=null;S.id=null;go(S.tab==='add'?'home':S.tab,{tab:S.tab==='add'?'home':S.tab});return}
+ if(D.close!==undefined){wake(false);go(S.tab==='add'?'home':S.tab,{id:null});return}
+ if(D.bright!==undefined){$('#fs').classList.toggle('hide');toast('Bakstelėkite ekraną, kad grąžintumėte mygtukus');return}
+ if(D.edit){const c=S.cards.find(x=>x.id===D.edit);wake(false);go('form',{id:c.id,draft:{...c,cardName:c.merchantName||c.cardName,auto:false}});return}
+ if(D.del){del(D.del);return}
+ if(D.mv){const i=S.cards.findIndex(c=>c.id===S.id),j=i+ +D.mv;if(j>=0&&j<S.cards.length){[S.cards[i],S.cards[j]]=[S.cards[j],S.cards[i]];save();toast('Perkelta')}return}
+ if(D.rmimg!==undefined){readForm();S.draft.image=null;render();return}
+ if(D.rmshot!==undefined){readForm();S.draft.shot=null;S.draft.useShot=false;render();return}
+ if(D.imp!==undefined){$('#imp').click();return}
+ if(D.fopen!==undefined){S.fo=!S.fo;render();return}
+ if(D.fc!==undefined){S.fc=D.fc||null;render();return}
+ if(D.pick){$('#'+D.pick).click();return}
+ if(D.c){readForm();S.draft.color=D.c;render();return}
+ if(D.i){readForm();S.draft.icon=D.i;S.draft.image=null;render();return}
+ if(D.theme){S.theme=D.theme;setTheme();save();render();return}
+ if(D.exp!==undefined){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(S.cards,null,1)],{type:'application/json'}));a.download='kortos.json';a.click();return}
+ if(D.clr!==undefined){if(confirm(T('Ištrinti VISAS korteles?'))){S.cards=[];save();render()}return}
+ if(D.ob!==undefined){S.ob=false;S.ob_i=0;render();return}
+ if(t.id==='sv'){readForm();const d=S.draft;
+  if(!d.cardName){toast('Įveskite kortelės pavadinimą');return}
+  if(!d.barcodeValue&&!d.shot){toast('Įveskite numerį arba įkelkite nuotrauką');return}
+  const now=Date.now();
+  if(S.id){Object.assign(S.cards.find(c=>c.id===S.id),d,{updatedAt:now})}
+  else S.cards.unshift({...d,id:'c'+now.toString(36)+Math.random().toString(36).slice(2,6),cardName:d.cardName,createdAt:now,updatedAt:now});
+  save();S.draft=null;S.id=null;S.tab='home';go('home');toast('Kortelė išsaugota')}
+});
+document.addEventListener('click',e=>{const f=$('#fs');if(f&&f.classList.contains('hide')&&!e.target.closest('button'))f.classList.remove('hide')});
+document.addEventListener('input',e=>{
+ if(e.target.id==='q'){S.q=e.target.value;const p=e.target.selectionStart;render();const q=$('#q');q.focus();q.setSelectionRange(p,p)}
+ if(e.target.id==='ft'){S.draft.auto=false}if(['fv','ft'].includes(e.target.id))upPrev()});
+document.addEventListener('change',e=>{if(e.target.id==='us'){S.draft.useShot=e.target.checked;upPrev()}if(e.target.id==='sh'){fromShot(e.target.files[0]);e.target.value=''}if(e.target.id==='imp'){importJson(e.target.files[0]);e.target.value=''}if(e.target.id==='im')fromLogo(e.target.files[0]);if(e.target.id==='ph')fromPhoto(e.target.files[0]);if(e.target.id==='ft'){S.draft.auto=false;upPrev()}});
+load();setTheme();render();if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+
+</script></body></html>
